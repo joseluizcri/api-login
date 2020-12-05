@@ -21,7 +21,7 @@ deploy_staging:
   stage: deploy
   script:
     - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize-stage.git
-    - git push -f heroku HEAD:master
+    - git push -f origin heroku
     - echo “Deployed to Staging Server https://api-login-atualize-stage.herokuapp.com/"
   environment:
     name: staging
@@ -32,7 +32,7 @@ deploy_production:
   stage: deploy
   script:
     - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize.git
-    - git push -f heroku HEAD:master
+    - git push -f origin heroku
     - echo “Deployed to Production Server https://api-login-atualize.herokuapp.com/"
   environment:
     name: production
