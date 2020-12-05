@@ -16,7 +16,7 @@ build:
 test:
   stage: test
   script:
-    - mvn clean install
+    - mvn test
 deploy_staging:
   stage: deploy
   script:
