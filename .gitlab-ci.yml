@@ -1,42 +1,38 @@
-image: maven
 stages:
   - build
   - test
   - deploy
-build:
+  -
+maven-build:
+  image: maven:3-jdk-8
   stage: build
-  script:
-    - mvn clean install -DskipTests
-  artifacts:
-    paths:
-      - target/*.jar
-    expire_in: 1 week
-  only:
-    - master
-test:
+  script: "mvn package -B"
+
+maven-test:
+  image: maven:3-jdk-8
   stage: test
-  script:
-    - mvn test
-deploy_staging:
+  script: "mvn test -B"
+
+deploy_test:
   stage: deploy
+  image: ruby:latest
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize-stage.git
-    - git push -f heroku master
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=api-login-atualize-stage --api-key=$HEROKU_API_KEY
     - echo “Deployed to Staging Server https://api-login-atualize-stage.herokuapp.com/"
-  environment:
-    name: staging
-    url: https://api-login-atualize-stage.herokuapp.com/
   only:
     - master
+
 deploy_production:
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize.git
-    - git push -f heroku master
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=api-login-atualize --api-key=$HEROKU_API_KEY
     - echo “Deployed to Production Server https://api-login-atualize.herokuapp.com/"
-  environment:
-    name: production
-    url: https://api-login-atualize.herokuapp.com/
   when: manual
   only:
     - master
