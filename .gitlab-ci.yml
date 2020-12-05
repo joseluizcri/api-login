@@ -20,7 +20,6 @@ deploy_test:
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=api-login-atualize-stage --api-key=$HEROKU_API_KEY
-    - echo “Deployed to Staging Server https://api-login-atualize-stage.herokuapp.com/"
   only:
     - master
 
@@ -31,9 +30,6 @@ deploy_production:
     - apt-get install -y ruby-dev
     - gem install dpl
     - dpl --provider=heroku --app=api-login-atualize --api-key=$HEROKU_API_KEY
-    - echo “Deployed to Production Server https://api-login-atualize.herokuapp.com/"
   when: manual
   only:
     - master
-after_script:
-  - echo “End CI”
