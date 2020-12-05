@@ -1,4 +1,4 @@
-image: java:8-jdk
+image: maven
 stages:
   - build
   - test
@@ -6,7 +6,7 @@ stages:
 build:
   stage: build
   script:
-    - mvn clean install
+    - mvn clean install -DskipTests
   artifacts:
     paths:
       - target/*.jar
@@ -16,7 +16,7 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew check
+    - mvn clean install
 deploy_staging:
   stage: deploy
   script:
