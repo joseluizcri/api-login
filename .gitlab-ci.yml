@@ -1,0 +1,44 @@
+image: java:8-jdk
+stages:
+  - build
+  - test
+  - deploy
+build:
+  stage: build
+  script:
+    - mvn clean install
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 week
+  only:
+    - master
+test:
+  stage: test
+  script:
+    - ./gradlew check
+deploy_staging:
+  stage: deploy
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize-stage.git
+    - git push -f heroku HEAD:master
+    - echo “Deployed to Staging Server https://api-login-atualize-stage.herokuapp.com/"
+  environment:
+    name: staging
+    url: https://api-login-atualize-stage.herokuapp.com/
+  only:
+    - master
+deploy_production:
+  stage: deploy
+  script:
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/api-login-atualize.git
+    - git push -f heroku HEAD:master
+    - echo “Deployed to Production Server https://api-login-atualize.herokuapp.com/"
+  environment:
+    name: production
+    url: https://api-login-atualize.herokuapp.com/
+  when: manual
+  only:
+    - master
+after_script:
+  - echo “End CI”
